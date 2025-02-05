@@ -2,21 +2,27 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>NZ Parliament Majority Calculator</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            max-width: 600px;
+            max-width: 100%;
             margin: auto;
             padding: 20px;
+            text-align: center;
         }
         .party {
             margin-bottom: 10px;
         }
+        select {
+            font-size: 16px;
+            padding: 5px;
+        }
         #result {
             margin-top: 20px;
             font-weight: bold;
+            font-size: 18px;
         }
         #footer {
             margin-top: 30px;
@@ -85,16 +91,24 @@
     
     <script>
         function calculateMajority() {
-            let totalVotes = 0;
+            let yesVotes = 0;
+            let noVotes = 0;
             const parties = document.querySelectorAll('.party select');
             
             parties.forEach(select => {
-                totalVotes += parseInt(select.value);
+                let vote = parseInt(select.value);
+                if (vote > 0) {
+                    yesVotes += vote;
+                } else if (vote < 0) {
+                    noVotes += Math.abs(vote);
+                }
             });
             
-            let resultText = `Total Votes: ${totalVotes} `;
-            if (totalVotes >= 62) {
+            let resultText = `Yes Votes: ${yesVotes}, No Votes: ${noVotes} `;
+            if (yesVotes >= 62) {
                 resultText += "(Majority Reached)";
+            } else if (noVotes >= 62) {
+                resultText += "(Majority Opposed)";
             } else {
                 resultText += "(No Majority)";
             }
